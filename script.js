@@ -1,202 +1,189 @@
-const quizQuestions = [
-    {
-      question: "What is the capital of Pakistan?",
-      options: ["Lahore", "Karachi", "Islamabad", "Rawalpindi"],
-      correctAnswer: "Islamabad",
-    },
-    {
-      question:
-        "Which mountain range runs along the northern border of Pakistan?",
-      options: ["Himalayas", "Andes", "Rocky Mountains", "Hindu Kush"],
-      correctAnswer: "Hindu Kush",
-    },
-    {
-      question: "What is the official language of Pakistan?",
-      options: ["Punjabi", "Sindhi", "Urdu", "Balochi"],
-      correctAnswer: "Urdu",
-    },
-    {
-      question: "Which river is the longest in Pakistan?",
-      options: ["Jhelum", "Sutlej", "Indus", "Chenab"],
-      correctAnswer: "Indus",
-    },
-    {
-      question: "Who is the founder of Pakistan?",
-      options: [
-        "Allama Iqbal",
-        "Muhammad Ali Jinnah",
-        "Zulfikar Ali Bhutto",
-        "Liaquat Ali Khan",
-      ],
-      correctAnswer: "Muhammad Ali Jinnah",
-    },
-    {
-      question: "What is the national sport of Pakistan?",
-      options: ["Cricket", "Hockey", "Squash", "Football"],
-      correctAnswer: "Hockey",
-    },
-    {
-      question:
-        "Which province in Pakistan is known as the 'Land of Five Rivers'?",
-      options: ["Sindh", "Khyber Pakhtunkhwa", "Balochistan", "Punjab"],
-      correctAnswer: "Punjab",
-    },
-    {
-      question: "In which year did Pakistan become an independent nation?",
-      options: ["1945", "1947", "1950", "1952"],
-      correctAnswer: "1947",
-    },
-    {
-      question:
-        "What is the name of Pakistan's largest mosque, located in Islamabad?",
-      options: ["Badshahi Mosque", "Faisal Mosque", "Lal Masjid", "Data Darbar"],
-      correctAnswer: "Faisal Mosque",
-    },
-    {
-      question: "Who is the current Prime Minister of Pakistan as of 2021?",
-      options: [
-        "Imran Khan",
-        "Nawaz Sharif",
-        "Asif Ali Zardari",
-        "Pervez Musharraf",
-      ],
-      correctAnswer: "Imran Khan",
-    },
-  ];
+const quizes = [
+  {
+    que: 'What is the Capital of Pakistan?',
+    options: ['Karachi', 'Lahore', 'Islamabad', 'Hyderabad'],
+    correct: 'Islamabad'
+  },
+  {
+    que: 'What is the National Sport of Pakistan?',
+    options: ['Cricket', 'Hockey', 'Tennis', 'football'],
+    correct: 'Hockey'
+  },
+  {
+      que: 'What is the capital of France?',
+      options: ['London', 'Berlin', 'Paris', 'Madrid'],
+      correct: 'Paris'
+  },
+  {
+      que: 'Which planet is known as the "Red Planet"?',
+      options: ['Earth', 'Venus', 'Jupiter','Mars'],
+      correct: 'Mars'
+  },
+  {
+      que: 'Who is the author of the famous play "Romeo and Juliet"?',
+      options: ['Charles Dickens', 'William Shakespeare', 'Jane Austen', 'F. Scott Fitzgerald'],
+      correct: 'William Shakespeare'
+  },
+  {
+      que: 'What is the largest mammal in the world?',
+      options: ['African Elephant', 'Blue Whale', 'Giraffe', 'Grizzly Bear'],
+      correct: 'Blue Whale'
+  },
+  {
+      que: 'What is the chemical symbol for gold?',
+      options: ['Go', 'Ag', 'Ge','Au'],
+      correct: 'Au'
+  },
+  {
+      que: 'Which gas do plants absorb from the atmosphere during photosynthesis?',
+      options: ['Oxygen', 'Carbon Dioxide', 'Nitrogen', 'Hydrogen'],
+      correct: 'Carbon Dioxide'
+  },
+  {
+      que: 'Who is often referred to as the "Father of Modern Physics"?',
+      options: ['Isaac Newton', 'Galileo Galilei', 'Albert Einstein', 'Marie Curie'],
+      correct: 'Albert Einstein'
+  },
+  {
+      que: 'Which country is known as the Land of the Rising Sun?',
+      options: ['China', 'South Korea', 'Japan', 'Thailand'],
+      correct: 'Japan'
+  }
+]
 
-  let indexno = 0;
-  let rightAns = 0;
-  let wrongAns = 0;
-  let userAns = undefined;
+let currentQuestion = 0
+let rightAnswers = 0
+let wrongAnswers = 0
+let userAnswer = undefined
+let timeLeft = 10;
+let timerInterval;
 
-  let quizDiv = document.getElementById("quizDiv");
-  let resultDiv = document.getElementById("resultDiv");
-  let nextButton = document.getElementById("nextBtn");
-  let title = document.getElementById("title");
-  let timer = document.getElementById("timer");
-  let queImage = document.getElementById("queImage");
-  let winningImage = document.getElementById("winningImage");
-  let score = document.getElementById("score");
-  let scoreNo = document.getElementById("scoreNo");
-  let wrongNo = document.getElementById("wrongNo");
-  let wrongDiv = document.getElementById("wrongDiv");
-  let losingImage = document.getElementById("losingImage");
-  let queCountNo = document.getElementById("queCountNo");
-  let queNumber = document.getElementById("queNumber");
-  let scoreMainContainer = document.getElementById("scoreMainContainer");
-  let retryBtn = document.getElementById("retryBtn");
 
-  let displayQuiz = () => {
-    quizDiv.innerHTML = null;
+const quizContainer = document.getElementById('quizContainer')
+const resultContainer = document.getElementById('resultContainer')
+const nextBtn = document.getElementById('next-btn')
+const timerElement = document.getElementById('time')
+const start = document.getElementById('start')
+const startButton = document.getElementById('start');
 
-    let quesDiv = document.createElement("div");
-    quesDiv.className = "questionDiv";
-    quesDiv.innerHTML = quizQuestions[indexno].question;
-    quizDiv.appendChild(quesDiv);
+startButton.addEventListener('click', startQuiz);
 
-    quizQuestions[indexno].options.map((data) => {
-      let optionInputDiv = document.createElement("div");
-      optionInputDiv.className = "optionDiv";
-      let inputLable = document.createElement("label");
-      inputLable.className = "radioBtnTxt";
-      let optionInput = document.createElement("input");
-      optionInput.className = "optionRadioBtn";
-      optionInput.type = "radio";
-      optionInput.name = "radioBtn";
-      optionInput.value = data;
-      inputLable.innerText = data;
+function startQuiz() {
+function startTimer() {
+  timeLeft = 10;
+  timerInterval = setInterval(updateTimer, 1000);
+}
+startTimer()
 
-      optionInput.addEventListener("change", function () {
-        console.log(this.value);
-        userAns = this.value;
-        nextButton.disabled = false;
-      });
+function updateTimer() {
+  if (timeLeft > 0) {
+    timeLeft--;
+    timerElement.innerText = `Time Left: ${timeLeft} sec`;
+  } else {
+    clearInterval(timerInterval);
+    wrongAnswers +
+    showNextQuestionn();
+  }
+}
 
-      quizDiv.appendChild(optionInputDiv);
-      inputLable.appendChild(optionInput);
-      optionInputDiv.appendChild(inputLable);
-    });
-  };
+function stopTimer() {
+  clearInterval(timerInterval);
+}
 
-  displayQuiz();
 
-  let countdown = 0;
-  let countdownInterval;
 
-  function countDownTimer(seconds) {
-    countdownInterval = setInterval(function () {
-      countdown++;
-      timer.innerHTML = countdown;
 
-      if (countdown === seconds) {
-        indexno++;
-        wrongAns++;
-        countdown = 0;
-        displayQuiz();
-      }
-      queCountNo.innerText = indexno + 1
-    }, 1000);
+const showQuestion = () => {
+  quizContainer.innerHTML = null
+  let queDiv = document.createElement('div')
+  let h3 = document.createElement('h3')
+  h3.innerText = quizes[currentQuestion].que
+  h3.className = 'quiz-question'
+  queDiv.appendChild(h3)
+  quizes[currentQuestion].options.map(data => {
+    let optionDiv = document.createElement('div')
+    let input = document.createElement('input')
+    let span = document.createElement('span')
+    input.type = 'radio'
+    input.name = 'quiz-option'
+    input.value = data
+    span.innerText = data
+    input.addEventListener('change', function () {
+      console.log(this.value)
+      userAnswer = this.value
+      nextBtn.disabled = false
+    })    
+    
+    optionDiv.appendChild(input)
+    optionDiv.appendChild(span)
+    optionDiv.className = 'quiz-option'
+    queDiv.appendChild(optionDiv)
+  })
+
+  quizContainer.appendChild(queDiv)
+  start.style.display = 'none'
+
+}
+
+function checkValue () {
+  console.log(this)
+}
+
+showQuestion()
+
+nextBtn.addEventListener('click', showNextQuestionn)
+
+function showNextQuestionn () {
+  stopTimer();
+  startTimer()
+  const question = quizes[currentQuestion]
+  if (userAnswer === question.correct) {
+    rightAnswers++
+  } else {
+    wrongAnswers++
   }
 
-  countDownTimer(10);
-
-  nextButton.addEventListener("click", nextQuestion);
-
-  function nextQuestion() {
-    if (userAns === quizQuestions[indexno].correctAnswer) {
-      rightAns++;
-      console.log("Right", rightAns);
-    } else {
-      wrongAns++;
-      console.log("wrong", wrongAns);
-    }
-
-    if (indexno + 1 < quizQuestions.length) {
-      indexno++;
-      queCountNo.innerHTML = indexno
-      countdown = 0;
-    } else if (indexno + 1 === quizQuestions.length) {
-      resultDiv.style.display = "block";
-      score.style.display = "block";
-      scoreNo.innerHTML = rightAns;
-      wrongDiv.style.display = "block";
-      scoreNo.style.display = "block";
-      wrongNo.innerHTML = wrongAns;
-      wrongNo.style.display = "block";
-      scoreMainContainer.style.display = "block";
-      winningResult();
-      quizDiv.style.display = "none";
-      nextButton.style.display = "none";
-      timer.style.display = "none";
-      queImage.style.display = "none";
-    }
-
-    nextButton.disabled = true;
-
-    displayQuiz();
+  if (currentQuestion + 1 < quizes.length) {
+    currentQuestion++
+  } else if (currentQuestion + 1 === quizes.length) {
+    resultContainer.style.display = 'block'
+    showResult()
+    quizContainer.style.display = 'none'
+    nextBtn.style.display = 'none'
   }
 
-  function winningResult() {
-    resultDiv.innerHTML = null;
-    let resultShow = document.createElement("div");
-    let divresult = document.createElement("h1");
-    divresult.innerHTML = rightAns > wrongAns ? "You Win" : "You lose" ;
-    if (rightAns > wrongAns ) {
-      winningImage.style.display = 'block'
-      retryBtn.style.display = 'block'
-      retryBtn.addEventListener ('click',function () {
-        window.location.reload()
-      })
-    } else if (rightAns < wrongAns) {
-      losingImage.style.display = 'block'
-      retryBtn.style.display = 'block'
-      retryBtn.addEventListener ('click',function () {
-        window.location.reload()
-      })
-    }
-  
-    queNumber.style.display = 'none'
-    title.style.textAlign = 'center'
-    resultShow.appendChild(divresult);
-    resultDiv.appendChild(resultShow);
-  }
+  nextBtn.disabled = true
+
+  showQuestion()
+}
+
+function showResult () {
+  stopTimer()
+  resultContainer.innerHTML = null
+  const div = document.createElement('div')
+  div.className = 'resultHeadings'
+  const h1 = document.createElement('h1')
+  h1.innerText = rightAnswers > wrongAnswers ? 'You Win' : 'You Lost'
+  const rightH3 = document.createElement('h3')
+  rightH3.innerText = 'Right Answers ' + rightAnswers
+  const score = document.createElement('h3')
+  score.innerText = 'Score ' + rightAnswers * 10
+  const wrongH3 = document.createElement('h3')
+  wrongH3.innerText = 'Wrong Answers ' + wrongAnswers
+
+  div.appendChild(h1)
+  div.appendChild(rightH3)
+  div.appendChild(score)
+  div.appendChild(wrongH3)
+
+  resultContainer.appendChild(div)
+  start.style.display = 'none'
+  time.style.display = 'none'
+}
+
+}
+
+
+
+
+
